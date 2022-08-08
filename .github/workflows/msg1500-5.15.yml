@@ -34,12 +34,12 @@ on:
 
 
 #点☆Star触发开始编译
-#  watch:
-#    types: started
+  watch:
+    types: started
 
 
 env:
-  REPO_URL: https://github.com/nanchuci/lede1
+  REPO_URL: https://github.com/benboguan/lede0
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/msg1500.config
@@ -90,7 +90,7 @@ jobs:
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
-    - name: clean feeds
+    - name: 清除 feeds
       run: cd openwrt && ./scripts/feeds clean
 
     - name: 下载feeds跟安装自定义插件
@@ -167,7 +167,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: msg1500-5.15内核固件
+        name: msg1500-LEDE-5.15内核固件
         path: ${{ env.FIRMWARE }}
 
     - name: 上传固件到WeTransfer
