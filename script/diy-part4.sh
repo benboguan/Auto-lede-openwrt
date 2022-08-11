@@ -74,17 +74,17 @@ git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
 #git clone --depth=1 https://github.com/KyleRicardo/MentoHUST-OpenWrt-ipk
 
 # Add lua-ipops
-svn co https://github.com/x-wrt/com.x-wrt/trunk/lua-ipops
+#svn co https://github.com/x-wrt/com.x-wrt/trunk/lua-ipops
 
 # Add luci-app-natflow-users
-svn co https://github.com/x-wrt/com.x-wrt/trunk/luci-app-natflow-users
+#svn co https://github.com/x-wrt/com.x-wrt/trunk/luci-app-natflow-users
 
 # Add natflow
-svn co https://github.com/x-wrt/com.x-wrt/trunk/natflow
+#svn co https://github.com/x-wrt/com.x-wrt/trunk/natflow
 
 # Add iptvhelper & luci-app-iptvhelper
-svn co https://github.com/kiddin9/openwrt-packages/trunk/iptvhelper
-svn co https://github.com/kiddin9/openwrt-packages/trunk/luci-app-iptvhelper
+#svn co https://github.com/kiddin9/openwrt-packages/trunk/iptvhelper
+#svn co https://github.com/kiddin9/openwrt-packages/trunk/luci-app-iptvhelper
 
 # Add ServerChan
 #git clone --depth=1 https://github.com/tty228/luci-app-serverchan
@@ -134,7 +134,7 @@ git clone --depth=1 https://github.com/tindy2013/openwrt-subconverter
 #git clone --depth=1 https://github.com/zcy85611/openwrt-luci-kcp-udp
 
 # Add OpenAppFilter
-git clone --depth=1 https://github.com/destan19/OpenAppFilter
+#git clone --depth=1 https://github.com/destan19/OpenAppFilter
 
 # Add luci-app-oled (R2S Only)
 #git clone --depth=1 https://github.com/NateLol/luci-app-oled

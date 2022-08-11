@@ -12,34 +12,13 @@
 name: OpenWrt-msg1500 5.10内核固件
 
 on: 
-  release:
-    types: [published]
 
-#编辑任意指定文件触发开始编译(去掉下面5个#开启,最下面一行是指定修改什么文件就触发编译,我现在是修改diy.config文件触发)
-#  push:
-#    branches:
-#      - master
-#    paths:
-#      - '.config'
-
-
-#release发布触发开始编译(只是一个触发条件,不会发布的,又麻烦,没卵用,不用研究)
-#  release:
-#    types: published
-
-
-#定时触发开始编译(把下面两个#去掉开启,时间设置请看定时编译说明)
-#  schedule:
-#    - cron: 0 20 * * 6
-
-
-#点☆Star触发开始编译
-#  watch:
-#    types: started
+  repository_dispatch:
+  workflow_dispatch:
 
 
 env:
-  REPO_URL: https://github.com/nanchuci/lede2
+  REPO_URL: https://github.com/nanchuci/lede1
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/msg1500.config
@@ -70,19 +49,16 @@ jobs:
         sudo -E apt-get -y autoremove
         sudo -E apt-get autoclean
         sudo timedatectl set-timezone "$TZ"
-        sudo mkdir -p /workdir
-        sudo chown $USER:$GROUPS /workdir
     - name: 下载固件源码
-      working-directory: /workdir
       run: |
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-    - name: 加载Cache缓存
-      uses: klever1988/cachewrtbuild@main
-      with:
-        ccache: 'true'
-        prefix: ${{ github.workspace }}/openwrt
+#    - name: 加载Cache缓存
+#      uses: klever1988/cachewrtbuild@main
+#      with:
+#        ccache: 'true'
+#        prefix: ${{ github.workspace }}/openwrt
     - name: 加载feeds跟自定义插件
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
@@ -106,7 +82,6 @@ jobs:
 
     - name: 加载.config设置
       run: |
-        [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x $DIY_P2_SH
         cd openwrt
