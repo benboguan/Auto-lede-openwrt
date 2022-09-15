@@ -19,16 +19,16 @@ sed -i 's/OpenWrt/MSG1500/g' package/base-files/files/bin/config_generate
 #sed -i 's/OpenWrt/RAISECOM-MSG1500-$/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
 
 # 修改闭源驱动2G wifi名称
-sed -i 's/OpenWrt/RAISECOM-MSG1500-$/g' package/lean/mt/drivers/mt_wifi/files/mt7615.1.2G.dat
+sed -i 's/OpenWrt/RAISECOM-MSG1500-$/g' package/nanchuci/drivers/mt_wifi/files/mt7615.1.2G.dat
 #sed -i 's/OpenWrt/RAISECOM-MSG1500-$/g' package/lean/MTK7615-DBDC-LINUX5.4/drivers/mt_wifi/files/mt7615.1.2G.dat
 sed -i 's/OpenWrt/RAISECOM-MSG1500-$/g' package/lean/mt/drivers/mt_wifi/files/mt7615.2G.dat
-sed -i 's/OpenWRT-2.4G/RAISECOM-MSG1500/g' package/nanchuci/drivers/mt7615d/files/lib/wifi/mt_dbdc.sh
+#sed -i 's/OpenWRT-2.4G/RAISECOM-MSG1500/g' package/lean/mt/drivers/mt7615d/files/lib/wifi/mt_dbdc.sh
 
 # 修改闭源驱动5G wifi名称
-sed -i 's/OpenWrt_5G/RAISECOM-MSG1500-5G-$/g' package/lean/mt/drivers/mt_wifi/files/mt7615.1.5G.dat
+sed -i 's/OpenWrt_5G/RAISECOM-MSG1500-5G-$/g' package/nanchuci/drivers/mt_wifi/files/mt7615.1.5G.dat
 #sed -i 's/OpenWrt_5G/RAISECOM-MSG1500-5G-$/g' package/lean/MTK7615-DBDC-LINUX5.4/drivers/mt_wifi/files/mt7615.1.5G.dat
 sed -i 's/OpenWrt_5G/RAISECOM-MSG1500-5G-$/g' package/lean/mt/drivers/mt_wifi/files/mt7615.5G.dat
-sed -i 's/OpenWRT-5G/RAISECOM-MSG1500-5G/g' package/nanchuci/drivers/mt7615d/files/lib/wifi/mt_dbdc.sh
+#sed -i 's/OpenWRT-5G/RAISECOM-MSG1500-5G/g' package/lean/mt/drivers/mt7615d/files/lib/wifi/mt_dbdc.sh
 
 # 添加个性信息
 #sed -i 's/R22.8.2/R22.8.2 by nanchuci/g' package/lean/default-settings/files/zzz-default-settings
@@ -43,10 +43,10 @@ sed -i "s/'UTC'/'CST-8'\n        set system.@system[-1].zonename='Asia\/Shanghai
 sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=165535' package/base-files/files/etc/sysctl.conf
 
 # 01_leds
-#patch -p1 -i ../patches/01_leds.patch
+patch -p1 -i ../patches/01_leds.patch
 
 # mt7621.mk
-#patch -p1 -i ../patches/mt7621.mk.patch
+patch -p1 -i ../patches/mt7621.mk.patch
 
 # set-irq-affinity
 patch -p1 -i ../patches/set-irq-affinity.patch
