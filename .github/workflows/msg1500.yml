@@ -140,7 +140,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: msg1500-dbdc开源固件
+        name: msg1500-dbdc闭源固件
         path: ${{ env.FIRMWARE }}
 
     - name: 上传固件到WeTransfer
