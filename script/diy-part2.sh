@@ -22,16 +22,16 @@ sed -i 's/OpenWrt/MSG1500/g' package/base-files/files/bin/config_generate
 sed -i 's/OpenWrt/RAISECOM-MSG1500-$/g' package/lean/mt/drivers/mt_wifi/files/mt7615.1.2G.dat
 #sed -i 's/OpenWrt/RAISECOM-MSG1500-$/g' package/lean/MTK7615-DBDC-LINUX5.4/drivers/mt_wifi/files/mt7615.1.2G.dat
 sed -i 's/OpenWrt/RAISECOM-MSG1500-$/g' package/lean/mt/drivers/mt_wifi/files/mt7615.2G.dat
-sed -i 's/OpenWRT-2.4G/RAISECOM-MSG1500/g' package/lean/mt/drivers/mt7615d/files/lib/wifi/mt_dbdc.sh
+sed -i 's/OpenWRT-2.4G/RAISECOM-MSG1500/g' package/nanchuci/drivers/mt7615d/files/lib/wifi/mt_dbdc.sh
 
 # 修改闭源驱动5G wifi名称
 sed -i 's/OpenWrt_5G/RAISECOM-MSG1500-5G-$/g' package/lean/mt/drivers/mt_wifi/files/mt7615.1.5G.dat
 #sed -i 's/OpenWrt_5G/RAISECOM-MSG1500-5G-$/g' package/lean/MTK7615-DBDC-LINUX5.4/drivers/mt_wifi/files/mt7615.1.5G.dat
 sed -i 's/OpenWrt_5G/RAISECOM-MSG1500-5G-$/g' package/lean/mt/drivers/mt_wifi/files/mt7615.5G.dat
-sed -i 's/OpenWRT-5G/RAISECOM-MSG1500-5G/g' package/lean/mt/drivers/mt7615d/files/lib/wifi/mt_dbdc.sh
+sed -i 's/OpenWRT-5G/RAISECOM-MSG1500-5G/g' package/nanchuci/drivers/mt7615d/files/lib/wifi/mt_dbdc.sh
 
 # 添加个性信息
-sed -i 's/R22.8.2/R22.8.2 by nanchuci/g' package/lean/default-settings/files/zzz-default-settings
+#sed -i 's/R22.8.2/R22.8.2 by nanchuci/g' package/lean/default-settings/files/zzz-default-settings
 
 # 修改banne文件（banne文件在根目录）（不要修改此行代码,怕弄的diy-lede.sh文件全失效,不需要的话前面加#，或者全行代码删除了）
 #rm -rf ./package/base-files/files/etc/banne && cd .. && cp -f ./banner openwrt/package/base-files/files/etc/ && cd openwrt
@@ -80,33 +80,11 @@ git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
 #svn co https://github.com/kiddin9/openwrt-packages/trunk/iptvhelper
 #svn co https://github.com/kiddin9/openwrt-packages/trunk/luci-app-iptvhelper
 
-# Add luci-app-gpsysupgrade
-#svn co https://github.com/kiddin9/my-packages/trunk/luci-app-gpsysupgrade
-
-# Add OpenClash
-#git clone --depth=1 -b master https://github.com/vernesong/OpenClash
-
-# Add luci-app-onliner (need luci-app-nlbwmon)
-git clone --depth=1 https://github.com/rufengsuixing/luci-app-onliner
-
-# Add luci-app-adguardhome
-#git clone --depth=1 https://github.com/SuLingGG/luci-app-adguardhome
-
-# Add luci-app-diskman
-git clone --depth=1 https://github.com/SuLingGG/luci-app-diskman
-mkdir parted
-cp luci-app-diskman/Parted.Makefile parted/Makefile
-
-# Add luci-app-dockerman
-#rm -rf ../lean/luci-app-docker
-#git clone --depth=1 https://github.com/KFERMercer/luci-app-dockerman
-#git clone --depth=1 https://github.com/lisaac/luci-lib-docker
-
-# Add luci-app-store
-#svn co https://github.com/linkease/istore/trunk/luci/luci-app-store
+# Add luci-app-pushbot
+svn co https://github.com/kiddin9/openwrt-packages/trunk/luci-app-pushbot
 
 # Add luci-app-nat6-helper
-git clone --depth=1 https://github.com/Ausaci/luci-app-nat6-helper
+#git clone --depth=1 https://github.com/Ausaci/luci-app-nat6-helper
 
 # Add luci-theme-argon
 #cd lede/package/lean
