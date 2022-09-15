@@ -1,6 +1,6 @@
 --- a/target/linux/ramips/mt7621/base-files/etc/init.d/set-irq-affinity
 +++ b/target/linux/ramips/mt7621/base-files/etc/init.d/set-irq-affinity
-@ -1,8 +1,11 @@
+@@ -1,8 +1,11 @@
  #!/bin/sh /etc/rc.common
 +#MTK-Wi-Fi
  
