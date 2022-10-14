@@ -43,13 +43,13 @@ sed -i "s/'UTC'/'CST-8'\n        set system.@system[-1].zonename='Asia\/Shanghai
 sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=165535' package/base-files/files/etc/sysctl.conf
 
 # 01_leds
-patch -p1 -i ../patches/01_leds.patch
+#patch -p1 -i ../patches/01_leds.patch
 
 # mt7621.mk
 patch -p1 -i ../patches/mt7621.mk.patch
 
 # set-irq-affinity
-patch -p1 -i ../patches/set-irq-affinity.patch
+#patch -p1 -i ../patches/set-irq-affinity.patch
 
 # Clone community packages to package/community
 mkdir package/community
