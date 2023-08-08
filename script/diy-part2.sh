@@ -65,7 +65,7 @@ svn co https://github.com/kiddin9/openwrt-packages/trunk/luci-app-eqos
 git clone --depth=1 https://github.com/garypang13/luci-app-dnsfilter
 
 # Add luci-app-passwall
-svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall
+svn co https://github.com/kenzok8/small/luci-app-passwall
 git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
 
 # Add luci-app-vssr <M>
