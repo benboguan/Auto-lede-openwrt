@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 env:
-  REPO_URL: https://github.com/benboguan/openwrt-Lienol
+  REPO_URL: https://github.com/benboguan/lede0
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/msg1500-xiao.config
@@ -140,7 +140,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: msg1500-dbdc开源精简固件
+        name: msg1500-dbdc闭源精简固件
         path: ${{ env.FIRMWARE }}
 
     - name: 上传固件到WeTransfer
