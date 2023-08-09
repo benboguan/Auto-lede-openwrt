@@ -172,7 +172,7 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: 移除旧文件
-      uses: c-hive/gha-remove-artifacts@v1.6.0
+      uses: c-hive/gha-remove-artifacts@v1.2.0
       with:
         age: '1 day'
         skip-recent: 3
