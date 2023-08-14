@@ -9,7 +9,7 @@
 #代码里有 name: 后面的内容随便改,冒号后面是有个空格的,如果修改固件名字就要考虑能不能显示出你想要的
 
 
-name: OpenWrt-tx1801 闭源固件
+name: OpenWrt-msg1500 5.10-MT5.1.0.0内核闭源固件
 
 on: 
 
@@ -18,9 +18,9 @@ on:
 
 env:
   REPO_URL: https://github.com/benboguan/lede0
-  REPO_BRANCH: mt7915-dbdc
+  REPO_BRANCH: MT7615-5.1.0.0
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: config/tx1801-xiao1.config
+  CONFIG_FILE: config/msg1500-5.10-5.1.0.0.config
   DIY_P1_SH: script/diy-part1.sh
   DIY_P2_SH: script/diy-part2.sh
   UPLOAD_BIN_DIR: true
@@ -140,7 +140,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: tx1801-LEDE-dbdc精简固件
+        name: msg1500-5.10-MT5.1.0.0dbdc闭源固件
         path: ${{ env.FIRMWARE }}
 
     - name: 上传固件到WeTransfer
