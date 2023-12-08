@@ -25,8 +25,6 @@ env:
   DIY_P2_SH: script/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: flase
-  UPLOAD_WETRANSFER: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
@@ -81,7 +79,7 @@ jobs:
       uses: klever1988/cachewrtbuild@main
       with:
         ccache: 'true'
-        mixkey: 'lede0'
+        mixkey: 'master'
         prefix: ${{ github.workspace }}/openwrt
 
     - name: 加载feeds跟自定义插件
