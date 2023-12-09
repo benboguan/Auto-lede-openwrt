@@ -18,7 +18,7 @@ on:
 
 env:
   REPO_URL: https://github.com/benboguan/lede0
-  REPO_BRANCH: master
+  REPO_BRANCH: mtk
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/msg1500-5.10.config
   DIY_P1_SH: script/diy-part1.sh
@@ -79,7 +79,7 @@ jobs:
       uses: klever1988/cachewrtbuild@main
       with:
         ccache: 'true'
-        mixkey: 'master'
+        mixkey: 'mtk'
         prefix: ${{ github.workspace }}/openwrt
 
     - name: 加载feeds跟自定义插件
