@@ -18,7 +18,7 @@ on:
 
 env:
   REPO_URL: https://github.com/benboguan/lede0
-  REPO_BRANCH: 7615-test
+  REPO_BRANCH: mtk1
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/msg1500-5.10-test.config
   DIY_P1_SH: script/diy-part1.sh
