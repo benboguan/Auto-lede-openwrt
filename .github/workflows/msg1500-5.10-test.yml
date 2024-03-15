@@ -36,8 +36,28 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: 准备结束
-      uses: actions/checkout@v3.1.0  
+    - name: 可用磁盘空间清理 (Ubuntu)
+      uses: jlumbroso/free-disk-space@main
+      with:
+        # this might remove tools that are actually needed,
+        # if set to "true" but frees about 6 GB
+        tool-cache: true
+        
+        # all of these default to true, but feel free to set to
+        # "false" if necessary for your workflow
+        android: true
+        dotnet: true
+        haskell: true
+        large-packages: true
+        swap-storage: true
+        
+    - name: 准备
+      uses: actions/checkout@main
+      
+    - name: 检查磁盘空间
+      run: |
+           echo "Free space:"
+           df -h
 
     - name: 开始安装编译所需系统
       env:
@@ -50,13 +70,13 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
     - name: 下载固件源码
       run: |
-        df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
     - name: 加载Cache缓存
       uses: klever1988/cachewrtbuild@main
       with:
         ccache: 'true'
+        mixkey: 'LEDE'
         prefix: ${{ github.workspace }}/openwrt
     - name: 加载feeds跟自定义插件
       run: |
@@ -162,7 +182,7 @@ jobs:
         echo "status=success" >>$GITHUB_OUTPUT
 
     - name: 上传固件到release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@master
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -172,13 +192,13 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: 移除旧文件
-      uses: c-hive/gha-remove-artifacts@v1.2.0
+      uses: c-hive/gha-remove-artifacts@main
       with:
         age: '1 day'
         skip-recent: 3
 
     - name: 移除以前的Releases
-      uses: dev-drprasad/delete-older-releases@v0.2.1
+      uses: dev-drprasad/delete-older-releases@master
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 3
