@@ -18,7 +18,7 @@ on:
 
 env:
   REPO_URL: https://github.com/benboguan/lede0
-  REPO_BRANCH: mtk1
+  REPO_BRANCH: mtk
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/msg1500-5.10-test.config
   DIY_P1_SH: script/diy-part1.sh
@@ -70,6 +70,7 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
     - name: 下载固件源码
       run: |
+        df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
     - name: 加载Cache缓存
