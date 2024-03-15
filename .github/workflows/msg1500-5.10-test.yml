@@ -37,7 +37,7 @@ jobs:
 
     steps:
     - name: 准备结束
-      uses: actions/checkout@main
+      uses: actions/checkout@v3.1.0  
 
     - name: 开始安装编译所需系统
       env:
@@ -178,7 +178,7 @@ jobs:
         skip-recent: 3
 
     - name: 移除以前的Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
+      uses: dev-drprasad/delete-older-releases@v0.2.1
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 3
