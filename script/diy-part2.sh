@@ -65,6 +65,7 @@ pushd package/community
 git clone --depth=1 https://github.com/garypang13/luci-app-dnsfilter
 
 # Add luci-app-passwall
+sed -i 's#GO_PKG_TARGET_VARS.*# #g' feeds/packages/utils/v2dat/Makefile
 #git clone --depth=1 https://github.com/kenzok8/small
 
 # Add luci-app-vssr <M>
