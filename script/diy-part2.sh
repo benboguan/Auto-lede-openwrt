@@ -40,7 +40,7 @@ sed -i 's/OpenWRT-5G/MSG1500_5G/g' package/lean/mt/drivers/mt7615d/files/lib/wif
 sed -i "s/'UTC'/'CST-8'\n        set system.@system[-1].zonename='Asia\/Shanghai'/g" package/base-files/files/bin/config_generate
 
 #修正连接数
-sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=165535' package/base-files/files/etc/sysctl.conf
+sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=65535' package/base-files/files/etc/sysctl.conf
 
 # 01_leds
 #patch -p1 -i ../patches/01_leds.patch
