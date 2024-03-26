@@ -9,7 +9,7 @@
 #代码里有 name: 后面的内容随便改,冒号后面是有个空格的,如果修改固件名字就要考虑能不能显示出你想要的
 
 
-name: OpenWrt-msg1500 闭源超精简固件
+name: OpenWrt-msg1500 5.4内核闭源超精简固件
 
 on: 
 
@@ -18,26 +18,44 @@ on:
 
 env:
   REPO_URL: https://github.com/benboguan/lede0
-  REPO_BRANCH: master
+  REPO_BRANCH: mtk
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/msg1500-xiao.config
   DIY_P1_SH: script/diy-part1.sh
   DIY_P2_SH: script/diy-part2.sh
-  UPLOAD_BIN_DIR: true
+  UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: flase
-  UPLOAD_WETRANSFER: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
 jobs:
   build:
-    name: 编译OpenWrt固件
+    name: 编译OpenWrt-lede固件
     runs-on: ubuntu-22.04
 
     steps:
-    - name: 准备结束
+    - name: 可用磁盘空间清理 (Ubuntu)
+      uses: jlumbroso/free-disk-space@main
+      with:
+        # this might remove tools that are actually needed,
+        # if set to "true" but frees about 6 GB
+        tool-cache: true
+        
+        # all of these default to true, but feel free to set to
+        # "false" if necessary for your workflow
+        android: true
+        dotnet: true
+        haskell: true
+        large-packages: true
+        swap-storage: true
+        
+    - name: 准备
       uses: actions/checkout@main
+      
+    - name: 检查磁盘空间
+      run: |
+           echo "Free space:"
+           df -h
 
     - name: 开始安装编译所需系统
       env:
@@ -48,32 +66,30 @@ jobs:
         sudo -E apt-get -y autoremove
         sudo -E apt-get autoclean
         sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+
     - name: 下载固件源码
+      working-directory: /workdir
       run: |
-        df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+
     - name: 加载Cache缓存
       uses: klever1988/cachewrtbuild@main
       with:
         ccache: 'true'
+        mixkey: 'mtk-5.4'
         prefix: ${{ github.workspace }}/openwrt
+
     - name: 加载feeds跟自定义插件
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
-    - name: 清除 feeds
-      run: cd openwrt && ./scripts/feeds clean
-
-    - name: 下载feeds跟安装自定义插件
-      run: cd openwrt && ./scripts/feeds update -a
-
-    - name: 部署feeds
-      run: cd openwrt && ./scripts/feeds install -a
-
-    - name: 再次下载安装feeds
+        
+    - name: 更新 & 安装 feeds
       run: |
         cd openwrt
         ./scripts/feeds update -a
@@ -85,30 +101,31 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
+
     - name: SSH远程连接服务器配置固件
       uses: P3TERX/ssh2actions@v1.0.0
       if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
     - name: 下载软件包
       id: package
       run: |
         cd openwrt
         make defconfig
-        make download -j8
+        make download -j8 V=11
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+
     - name: 开始编译固件
       id: compile
       run: |
         cd openwrt
-        echo -e "$(nproc) thread compile"
-        make -j$(nproc) || make -j1 || make -j1 V=s
-        echo "status=success" >>$GITHUB_OUTPUT
-        grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
-        [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
-        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        echo -e "$(($(nproc)+1)) thread compile"
+        make -j$(($(nproc)+1)) || make -j$(nproc) || make -j1 V=s
+        echo "status=success" >> $GITHUB_OUTPUT
+
     - name: 检查github储存空间情况
       if: (!cancelled())
       run: df -hT
@@ -122,12 +139,14 @@ jobs:
 
     - name: 整理固件文件夹
       id: organize
-      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      if: steps.compile.outputs.status == 'success'
       run: |
         cd openwrt/bin/targets/*/*
+        rm -rf *.buildinfo
+        rm -rf *.json
         rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "status=success" >>$GITHUB_OUTPUT
+        echo "status=success" >> $GITHUB_OUTPUT
         
     - name: 上传.config配置文件在github空间    
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_CONFIG == 'true'
@@ -135,34 +154,26 @@ jobs:
       with:
         name: config.buildinfo_${{ env.FILE_DATE }}
         path: ./config    
-    
+
     - name: 上传固件在github空间
       uses: actions/upload-artifact@main
-      if: steps.organize.outputs.status == 'success' && !cancelled()
+      if: env.UPLOAD_FIRMWARE == 'true' && steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: msg1500-dbdc闭源精简固件
+        name: msg1500-5.4-dbdc闭源精简固件
         path: ${{ env.FIRMWARE }}
 
-    - name: 上传固件到WeTransfer
-      id: wetransfer
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
-      run: |
-        curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
-        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
-        echo "url=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >>$GITHUB_OUTPUT
     - name: 创建 release tag
       id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-        echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >>$GITHUB_OUTPUT
+        echo "release_tag=$(date +"%Y.%m.%d-%H%M")-msg1500">> $GITHUB_OUTPUT
         touch release.txt
-        [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-        [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+        echo "msg1500-5.4-xiao" >> release.txt
+        echo "📥 固件下载" >> release.txt
         echo "status=success" >>$GITHUB_OUTPUT
 
     - name: 上传固件到release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@master
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -171,17 +182,19 @@ jobs:
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
-    - name: 移除旧文件
-      uses: c-hive/gha-remove-artifacts@v1.2.0
+    - name: 删除旧发布的固件
+      uses: dev-drprasad/delete-older-releases@master
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
-        age: '1 day'
-        skip-recent: 3
-
-    - name: 移除以前的Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      with:
-        keep_latest: 3
+        keep_latest: 5
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 删除过时工作流程
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        repository: ${{ github.repository }}
+        retain_days: 1
+        keep_minimum_runs: 3
