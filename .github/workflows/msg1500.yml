@@ -166,7 +166,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-        echo "release_tag=$(date +"%Y.%m.%d-%H%M")-msg1500">> $GITHUB_OUTPUT
+        echo "release_tag=$(date +"%Y.%m.%d-%H%M")-msg1500-5.4">> $GITHUB_OUTPUT
         touch release.txt
         echo "msg1500-5.4" >> release.txt
         echo "📥 固件下载" >> release.txt
