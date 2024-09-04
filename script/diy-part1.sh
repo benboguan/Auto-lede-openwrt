@@ -17,14 +17,26 @@
 #sed -i '$a src-git lienol https://github.com/Lienol/openwrt-package' feeds.conf.default
 #sed -i '$a src-git diy https://github.com/CCnut/feed-netkeeper.git;LUCI-LUA-UCITRACK' feeds.conf.default
 
+status_cfg=$(git status | grep -cE "feeds.conf.default$")
+if [[ $status_cfg -eq 1 ]]; then
+    git reset HEAD feeds.conf.default
+    git checkout feeds.conf.default
+fi
+
+\rm -rf ./tmp
+\rm -rf ./logs/*
+
+git pull
+
 # Add a feed source
-#echo 'src-git jerryk https://github.com/jerrykuku/openwrt-package' >>feeds.conf.default
-#echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
-sed -i '1i src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
-sed -i '2i src-git small https://github.com/kenzok8/small' feeds.conf.default
+echo "src-git feeds_app https://github.com/kenzok8/openwrt-packages" >> feeds.conf.default
+echo "src-git small https://github.com/kenzok8/small" >> feeds.conf.default
 ./scripts/feeds update -a && rm -rf feeds/luci/applications/luci-app-mosdns && rm -rf feeds/packages/net/{alist,adguardhome,smartdns}
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+
+./scripts/feeds install -a
+#make menuconfig
 
 # Add luci-theme-argon
 #cd lede/package/lean
