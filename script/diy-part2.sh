@@ -62,7 +62,7 @@ pushd package/community
 #svn co https://github.com/kiddin9/openwrt-packages/trunk/luci-app-eqos
 
 # Add dnsfilter
-git clone --depth=1 https://github.com/garypang13/luci-app-dnsfilter
+#git clone --depth=1 https://github.com/garypang13/luci-app-dnsfilter
 
 # Add luci-app-passwall
 #sed -i 's#GO_PKG_TARGET_VARS.*# #g' feeds/packages/utils/v2dat/Makefile
