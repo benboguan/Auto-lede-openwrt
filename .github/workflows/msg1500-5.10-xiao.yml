@@ -20,7 +20,7 @@ env:
   REPO_URL: https://github.com/benboguan/lede0
   REPO_BRANCH: mtk
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: config/msg1500-5.10-xiao.config
+  CONFIG_FILE: configs/msg1500-5.10-xiao.config
   DIY_P1_SH: script/diy-part1.sh
   DIY_P2_SH: script/diy-part2.sh
   UPLOAD_BIN_DIR: false
